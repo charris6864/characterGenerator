@@ -1,0 +1,2197 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My Character Generator</title>
+ 	    <link rel="stylesheet" href="styles.css">
+
+    </head>
+    
+    <body>
+    	<h1>What kind of character do you want?</h1><br />
+        <h3>Answer these to develope character base.</h3><br />
+        <div id="feedback"></div>
+        <form id="questionForm">
+        	Please type your character's name:<input id="nameSelect"></input><br />
+            Pick you favorite activity.
+            <select id="race">
+            	<option value="human">I am a person of many talents.</option>
+                <option value="elf">Spending time in the woods.</option>
+                <option value="dwarf">I like to work with my hands.</option>
+                <option value="gnome">All day, every day, I'm socialiazing.</option>
+                <option value="halfling">Wanderlust has me. I need to see the world.</option>
+                <option value="orc">Strength and size are the greatest attributes.</option>
+           	</select><br />
+            What type of character do you want to play?
+            <select id="charType">
+            	<option value="war">Warrior</option>
+                <option value="rog">Rogue</option>
+                <option value="mag">Mage</option>
+                <option value="heal">Healer</option>
+            </select><br />
+    		What value do you value the most?
+            <select id="attributeType">
+            	<option value="str">Strength</option>
+                <option value="dex">Agility</option>
+                <option value="con">Toughness</option>
+                <option value="int">Smarts</option>
+                <option value="wis">Wisdom</option>
+                <option value="cha">Charisma</option>
+         	</select><br />
+            If caught in a bar fight, what would you do?
+            <select id="alignType">
+            	<option value="nuetral">Stay and watch, might be fun.</option>
+                <option value="chaotic">Join in and take out as many as possible.</option>
+                <option value="lawful">Call the cops. They need to find out who is responsible.</option>
+           	</select><br />
+            While in church, the offering tray comes around. What do you do?
+            <select id="goodType">
+            	<option value="good">Put money into the tray.</option>
+                <option value="nuet">Flip a coin. See what you do.</option>
+                <option value="evil">When no one is looking, take some money out.</option>
+          	</select><br />
+       <h3>Answer these to fill out your character.</h3><br />
+       		How tall do you want to be?
+            <select id="size">
+            	<option value="tall">I wish I was a basketball player.</option>
+                <option value="average">I am all good on height.</option>
+                <option value="short">A mouse can get in and out of a lot of places.</option>
+          	</select><br />
+            How much weight does your character pack on?
+            <select id="weight">
+            	<option value="fat">Weight equals sturdiness.</option>
+                <option value="normal">Solid and fit.</option>
+                <option value="skinny">I like to stay on the skinnier side of things.</option>
+          	</select><br />     
+            <input type="button" value="Roll Character" id="myButton" />
+       	</form>
+        <hr>
+        <div id="output">
+            <div id="characterName"></div>
+            <h3>Attributes</h3>
+                <div id="text1"></div><br />
+            <h3>Class, Feats, and Skills</h3>
+                <div id="text2"></div><br />
+            <h3>Rounding Out Your Character</h3>
+                <div id="text3"></div><br />
+      	</div>
+        
+        <script>
+			//call the form
+			var questionForm = document.getElementById('questionForm');
+			
+			//call the button
+			var submitButton = document.getElementById('myButton');
+			
+			//call name select
+			var nameSelect = document.getElementById('nameSelect');
+			
+			//call the feedback div
+			var feedback = document.getElementById('feedback');
+			
+			//call the selection inputs
+			var race = document.getElementById('race');
+			var charType = document.getElementById('charType');
+			var att = document.getElementById('attributeType');
+			var alignment = document.getElementById('alignType');
+			var gve = document.getElementById('goodType');
+			var size = document.getElementById('size');
+			var weight = document.getElementById('weight');
+			
+			submitButton.addEventListener('click',
+				function(event) {
+					//make a validation
+					var isValid = true;
+					
+					
+					//make attribute stats
+					var str = 0;
+					var dex = 0;
+					var con = 0;
+					var int = 0;
+					var wis = 0;
+					var cha = 0;
+					
+					//make class variables
+					var charClass = 0;
+					var finalClass = 0;
+					
+					//this is the variable for the end alignment
+					var finalAlignment = 0
+					
+					//setting up variables for the skills
+					var appraise = 0;
+					var balance = 0;
+					var bluff = 0;
+					var climb = 0;
+					var concentration = 0;
+					var decipher = 0;
+					var diplomacy = 0;
+					var disable = 0;
+					var disguise = 0;
+					var escArtist = 0;
+					var gather = 0;
+					var handle = 0;
+					var heal = 0;
+					var hide = 0;
+					var intimidate = 0;
+					var jump = 0;
+					var know = 0;
+					var listen = 0;
+					var move = 0;
+					var lock = 0;
+					var sear = 0;
+					var sense = 0;
+					var sleight = 0;
+					var spellcraft = 0;
+					var spot = 0;
+					var survival = 0;
+					var useMagic = 0;
+					var perform = 0;
+					var ride = 0;
+					var tumble = 0;
+					
+					//variables for height and weight
+					var sizHeight = 0;
+					var sizWeight = 0;
+					
+					//make the variables to enter into divs
+					var armor = 0;
+					var feats = 0;
+					var gear = 0;
+					var spells = 0;
+					var hp = 0;
+					var initiative = 0;
+					
+					//to cast to a div on another page
+					//var characterName = document.getElementById('characterName');
+					var text1 = document.getElementById('text1');
+					var text2 = document.getElementById('text2');
+					var text3 = document.getElementById('text3');
+					
+					//test some values
+					//console.log(att.value);
+					//console.log(charType.value);
+					//console.log(size.value);
+					
+					//warrior type fighter or barbarian
+					if(charType.value == "war" && att.value == "str")	{
+						console.log("attacking warrior");	
+						str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						chaClass = "strBarbarian";
+						finalClass = "Barbarian Level 1";
+					};
+					
+					if(charType.value == "war" && att.value =="dex") {
+						console.log("mobile Monk");
+						str = 12; dex = 16; con = 11; int = 10; wis = 14; cha = 10;
+						chaClass = "dexMonk";	
+						finalClass = "Monk Level 1";	
+					};
+					
+					if(charType.value == "war" && att.value == "con") {
+						console.log("tanking warror");
+						str = 14; dex = 11; con = 16; int = 11; wis = 10; cha = 12;	
+						chaClass = "conFighter";
+						finalClass = "Fighter Level 1";
+					};
+					
+					if(charType.value == "war" && att.value == "int") {
+						console.log("intelligent warrior");
+						str = 13; dex = 14; con = 11; int = 16; wis = 10; cha = 9;	
+						chaClass = "intBarbarian";
+						finalClass = "Barbarian Level 1";
+					};
+					
+					if(charType.value == "war" && att.value == "wis") {
+						console.log("wise Monk");
+						str = 14; dex = 11; con = 12; int = 10; wis = 16; cha = 10;	
+						chaClass = "wisMonk";
+						finalClass = "Monk Level 1";
+					};
+					
+					if(charType.value == "war" && att.value == "cha") {
+						console.log("popular rogue	");
+						str = 10; dex = 14; con = 12; int = 11; wis =10; cha = 16;
+						chaClass = "chaFighter";
+						finalClass = "Fighter Level 1";
+					};
+					
+					//rogue type. either rogue, ranger, bard
+					if(charType.value == "rog" && att.value == "str")	{
+						console.log("2 weapon ranger");	
+						str = 16; dex = 14; con = 12; int = 10; wis = 12; cha = 10;
+						chaClass = "strRanger";
+						finalClass = "Ranger Level 1";
+					};
+					
+					if(charType.value == "rog" && att.value =="dex") {
+						console.log("attacking rogue");
+						str = 11; dex = 16; con = 12; int = 14; wis = 10; cha = 10;
+						chaClass = "dexRogue";
+						finalClass = "Rogue Level 1";
+					};
+					
+					if(charType.value == "rog" && att.value == "con") {
+						console.log("tough ranger");
+						str = 12; dex = 14; con = 16; int = 11; wis = 11; cha = 10;	
+						chaClass = "conRanger";
+						finalClass = "Ranger Level 1";
+					};
+					
+					if(charType.value == "rog" && att.value == "int") {
+						console.log("trap monkey rogue");
+						str = 10; dex = 14; con = 12; int = 16; wis = 10; cha = 11;	
+						chaClass = "intRogue";
+						finalClass = "Rogue Level 1";
+					};
+					
+					if(charType.value == "rog" && att.value == "wis") {
+						console.log("wise ranger bow");
+						str = 10; dex = 14; con = 12; int = 11; wis = 16; cha = 10;	
+						chaClass = "wisRanger";
+						finalClass = "Ranger Level 1";
+					};
+					
+					if(charType.value == "rog" && att.value == "cha") {
+						console.log("the bard");
+						str = 10; dex = 14; con = 12; int = 11; wis =10; cha = 16;
+						chaClass = "chaBard";
+						finalClass = "Bard Level 1";
+					};
+					
+					//magic base classes wizard, sorc, bard
+					if(charType.value == "mag" && att.value == "str")	{
+						console.log("melee bard");	
+						str = 16; dex = 12; con = 11; int = 11; wis = 10; cha = 14;
+						chaClass = "strBard";
+						finalClass = "Bard Level 1";
+					};
+					
+					if(charType.value == "mag" && att.value =="dex") {
+						console.log("dodgy wizard");
+						str = 11; dex = 16; con = 12; int = 14; wis = 10; cha = 10;
+						chaClass = "dexWizard";
+						finalClass = "Wizard Level 1";
+					};
+					
+					if(charType.value == "mag" && att.value == "con") {
+						console.log("tough sorcerer");
+						str = 10; dex = 12; con = 16; int = 11; wis = 10; cha = 14;	
+						chaClass = "conSorcerer";
+						finalClass = "Sorcerer Level 1";
+					};
+					
+					if(charType.value == "mag" && att.value == "int") {
+						console.log("straight wizard");
+						str = 10; dex = 14; con = 12; int = 16; wis = 10; cha = 11;	
+						chaClass = "intWizard";
+						finalClass = "Wizard Level 1";
+					};
+					
+					if(charType.value == "mag" && att.value == "wis") {
+						console.log("wise sorceror");
+						str = 10; dex = 12; con = 11; int = 10; wis = 16; cha = 14;	
+						chaClass = "wisSorcerer";
+						finalClass = "Sorcerer Level 1";
+					};
+					
+					if(charType.value == "mag" && att.value == "cha") {
+						console.log("straight sorcorer");
+						str = 10; dex = 14; con = 12; int = 11; wis =10; cha = 16;
+						chaClass = "chaSorcerer";
+						finalClass = "Sorcerer Level 1";
+					};
+					
+					// healing types druid, paladin, or cleric
+					if(charType.value == "heal" && att.value == "str")	{
+						console.log("paladin");	
+						str = 16; dex = 11; con = 12; int = 10; wis = 10; cha = 14;
+						chaClass = "strPaladin";
+						finalClass = "Paladin Level 1";
+					};
+					
+					if(charType.value == "heal" && att.value =="dex") {
+						console.log("druid");
+						str = 11; dex = 16; con = 12; int = 10; wis = 14; cha = 10;
+						chaClass = "dexDruid";
+						finalClass = "Druid Level 1";
+					};
+					
+					if(charType.value == "heal" && att.value == "con") {
+						console.log("cleric");
+						str = 12; dex = 11; con = 16; int = 10; wis = 14; cha = 10;	
+						chaClass = "conCleric";
+						finalClass = "Cleric Level 1";
+					};
+					
+					if(charType.value == "heal" && att.value == "int") {
+						console.log("druid");
+						str = 10; dex = 10; con = 12; int = 16; wis = 14; cha = 11;	
+						chaClass = "intDruid";
+						finalClass = "Druid Level 1";
+					};
+					
+					if(charType.value == "heal" && att.value == "wis") {
+						console.log("cleric");
+						str = 10; dex = 14; con = 12; int = 11; wis = 16; cha = 10;	
+						chaClass = "wisCleric";
+						finalClass = "Cleric Level 1";
+					};
+					
+					if(charType.value == "heal" && att.value == "cha") {
+						console.log("Paladin");
+						str = 11; dex = 14; con = 12; int = 10; wis =10; cha = 16;
+						chaClass = "chaPaladin";
+						finalClass = "Paladin Level 1";
+					};
+					
+					//racial modifiers
+					if(race.value == "elf") {
+						dex = dex + 2;
+						con = con - 2;		
+					};
+					
+					if(race.value == "dwarf") {
+						con = con + 2;
+						cha = cha - 2;	
+					};
+					
+					if(race.value == "gnome") {
+						con = con + 2;
+						str = str - 2;
+					};
+					
+					if(race.value == "halfling") {
+						dex = dex + 2;
+						str = str - 2;
+					};
+				
+					if(race.value == "orc") {
+						str = str + 2;
+						int = int - 2;
+						cha = cha - 2;
+					};
+					
+					//This tests my character class variable
+					//console.log(chaClass);
+					
+					//human with class
+					if(race.value == "human" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						survival = 4; listen = 4; intimidate = 4; spot = 2; sear = 2;
+						feats = "Weapon Focus (greataxe) +1, Improved Initiative +4";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 13;
+						initiative = 4;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "dexMonk") {
+						//str = 12; dex = 16; con = 11; int = 10; wis = 14; cha = 10;
+						listen = 6; move = 7; escArtist = 7; hide = 7; tumble = 7;
+						feats = "Dodge (+1 AC), Mobility";
+						gear = "Quarterstaff, Sling";
+						armor = 15;
+						initiative = 3;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "conFighter") {
+						//str = 14; dex = 11; con = 16; int = 11; wis = 10; cha = 12;	
+						intimidate = 5; sear = 2; listen = 2; spot = 2;
+						feats = "Weapon Focus (+1), Power Attack, Blind-Fight";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 16;
+						initiative = 0;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "intBarbarian") {
+						//str = 13; dex = 14; con = 11; int = 16; wis = 10; cha = 9;	
+						survival = 4; listen = 4; intimidate = 4; spot = 2; sear = 2; ride = 6; sear = 5; climb = 5;
+						feats = "Weapon Focus +1, Power Attack";
+						gear = "Great Axe, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "wisMonk") {
+						//str = 14; dex = 11; con = 12; int = 10; wis = 16; cha = 10;	
+						listen = 7; move = 4; tumble = 4; hide = 4; spot = 5;
+						feats = "Improved Initiative (+4), Blind-Fight";
+						gear = "Quarterstaff, Sling";
+						armor = 13;
+						initiative = 4;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "chaFighter") {
+						//str = 10; dex = 14; con = 12; int = 11; wis =10; cha = 16;
+						intimidate = 7; listen = 2; sear = 2;
+						feats = "Dex Fighting, Improved Initiative (+4)";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 6;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "strRanger") {
+						//str = 16; dex = 14; con = 12; int = 10; wis = 12; cha = 10;
+						survival = 5; hide = 6; move = 6; heal = 5; spot = 5; listen = 5; sear = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids, Improved Initiative (+4)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 15;
+						initiative = 6;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "dexRogue") {
+						//str = 11; dex = 16; con = 12; int = 14; wis = 10; cha = 10;
+						move = 7; hide = 7; spot = 4; disable = 6; lock = 7; sleight = 7; sear = 6; decipher = 6; useMagic = 4;
+						feats = "Improved Initiative, Dodge";
+						gear = "Short Sword";
+						armor = 15;
+						initiative = 7;
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "conRanger") {
+						//str = 12; dex = 14; con = 16; int = 11; wis = 11; cha = 10;	
+						survival = 4; hide = 6; move = 6; listen = 4; spot = 4; heal = 4; sear = 4;
+						feats = "Point Blank Shot, Improved Initiative, Favored Enemy: Goblinoid";
+						gear = "Longbow Studded Leather";
+						armor = 15;
+						initiative = 6;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "intRogue") {
+						//str = 10; dex = 14; con = 12; int = 16; wis = 10; cha = 11;
+						move = 6; hide = 6; spot = 4; listen = 4; sear = 7; disable = 7; lock = 6; sleight = 7; bluff = 4;
+						feats = "Improved Initiative, Dex Fighting";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 14;
+						intiative = 6;	
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "wisRanger") {
+						//str = 10; dex = 14; con = 12; int = 11; wis = 16; cha = 10;	
+						survival = 7; hide = 6; move = 6; listen = 7; spot = 7; heal = 7; sear = 4;
+						feats = "Point Blank Shot, Improved Initiative (+4)";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 15;
+						initiative = 6;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "chaBard") {
+						//str = 10; dex = 14; con = 12; int = 11; wis = 10; cha = 16;
+						perform = 7; spellcraft = 4; gather = 7; decifer = 4; disguise = 7; sleight = 6; listen = 4;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 7;
+					};
+					
+					if(race.value == "human" && chaClass == "strBard") {
+						//str = 16; dex = 12; con = 11; int = 11; wis = 10; cha = 14;
+						perform = 6; spellcraft = 4; gather = 6; decifer = 4; disguise = 6; sleight = 5; listen = 4;
+						feats = "Dodge, Improved Initiative";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 14;
+						initiative = 1;
+						hp = 6;
+					};
+					
+					if(race.value == "human" && chaClass == "dexWizard") {
+						//str = 11; dex = 16; con = 12; int = 14; wis = 10; cha = 10;
+						spellcraft = 6; concentration = 5; decipher = 6;
+						feats = "Toughness, Dodge";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 13;
+						initiative = 3;
+						hp = 8;						
+					};
+					
+					if(race.value == "human" && chaClass == "conSorcerer") {
+						//str = 10; dex = 12; con = 16; int = 11; wis = 10; cha = 14;
+						spellcraft = 4; concentration = 7; gather = 4;
+						feats = "Toughness, Combat Casting";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 11;
+						initiative = 1;
+						hp = 10;
+					};
+					
+					if(race.value == "human" && chaClass == "intWizard") {
+						//str = 10; dex = 14; con = 12; int = 16; wis = 10; cha = 11;	
+						spellcraft = 7; concentration = 5; decipher = 7; hide = 4; move = 4; sear = 5;
+						feats = "Toughness, Combat Casting";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 8;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "human" && chaClass == "wisSorcerer") {
+						//str = 10; dex = 12; con = 11; int = 10; wis = 16; cha = 14;	
+						spellcraft = 4; concentration = 4; gather = 4;
+						feats = "Toughness, Combat Casting";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 11;
+						initiative = 1;
+						hp = 7;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "human" && chaClass == "chaSorcerer") {
+						//str = 10; dex = 14; con = 12; int = 11; wis =10; cha = 16;
+						spellcraft = 4; concentration = 5; gather = 7;
+						feats = "Toughness, Combat Casting";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 8;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "human" && chaClass == "strPaladin") {
+						//str = 16; dex = 11; con = 12; int = 10; wis = 10; cha = 14;
+						heal = 4; ride = 4; diplomacy = 6;
+						feats = "Weapon Focus (+1), Improved Initiative";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 4;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "dexDruid") {
+						//str = 11; dex = 16; con = 12; int = 10; wis = 14; cha = 10;
+						spellcraft = 4; concentration = 5; survival = 6; heal = 6; handle = 4;
+						feats = "Scribe Scroll, Toughness";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 18;
+						initiative = 3;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "conCleric") {
+						//str = 12; dex = 11; con = 16; int = 10; wis = 14; cha = 10;	
+						spellcraft = 4; concentration = 7; heal = 6;
+						feats = "Scribe Scroll, Alertness";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 11;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "human" && chaClass == "intDruid") {
+						//str = 10; dex = 10; con = 12; int = 16; wis = 14; cha = 11;
+						spellcraft = 7; concentration = 5; survival = 6; heal = 6; handle = 4;
+						feats = "Scribe Scroll, Toughness";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 15;
+						initiative = 0;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "human" && chaClass == "wisCleric") {
+						//str = 10; dex = 14; con = 12; int = 11; wis = 16; cha = 10;	
+						spellcraft = 4; concentration = 5; heal = 7;
+						feats = "Scribe Scroll, Alertness";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 0;
+						hp = 9;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "human" && chaClass == "chaPaladin") {
+						//str = 11; dex = 14; con = 12; int = 10; wis = 10; cha = 16;
+						heal = 4; ride = 6; diplomacy = 7;
+						feats = "Weapon Focus (+1), Improved Initiative";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 6;
+						hp = 11;
+						spells = "N/A";
+ 					};
+					
+					//elf with class
+					if(race.value == "elf" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						survival = 4; listen = 4; intimidate = 5; spot = 2;
+						feats = "Weapon Focus (greataxe) +1";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 13;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "dexMonk") {
+						//str = 12; dex = 18; con = 9; int = 10; wis = 14; cha = 10;
+						listen = 6; move = 8; escArtist = 8; hide = 8;
+						feats = "Dodge (+1 AC)";
+						gear = "Quarterstaff, Sling";
+						armor = 16;
+						initiative = 4;
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "conFighter") {
+						//str = 14; dex = 13; con = 14; int = 11; wis = 10; cha = 12;	
+						intimidate = 5; sear = 2; listen = 2; spot = 2;
+						feats = "Weapon Focus (+1), Power Attack";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 17;
+						initiative = 1;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "intBarbarian") {
+						//str = 13; dex = 16; con = 9; int = 16; wis = 10; cha = 9;	
+						survival = 4; listen = 4; intimidate = 4; spot = 2; sear = 5; ride = 6; sear = 5;
+						feats = "Weapon Focus +1";
+						gear = "Great Axe, Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "wisMonk") {
+						//str = 14; dex = 13; con = 10; int = 10; wis = 16; cha = 10;	
+						listen = 7; move = 4; tumble = 4; hide = 4;
+						feats = "Improved Initiative (+4)";
+						gear = "Quarterstaff, Sling";
+						armor = 14;
+						initiative = 5;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "chaFighter") {
+						//str = 10; dex = 16; con = 10; int = 11; wis =10; cha = 16;
+						intimidate = 7; listen = 2;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "strRanger") {
+						//str = 16; dex = 16; con = 10; int = 10; wis = 12; cha = 10;
+						survival = 5; hide = 7; move = 7; heal = 5; spot = 5; listen = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "dexRogue") {
+						//str = 11; dex = 18; con = 10; int = 14; wis = 10; cha = 10;
+						move = 8; hide = 8; spot = 4; disable = 6; lock = 8; sleight = 8; sear = 6; decipher = 6;
+						feats = "Improved Initiative";
+						gear = "Short Sword";
+						armor = 16;
+						initiative = 8;
+						hp = 6;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "conRanger") {
+						//str = 12; dex = 16; con = 14; int = 11; wis = 11; cha = 10;	
+						survival = 4; hide = 7; move = 7; listen = 4; spot = 4; heal = 4;
+						feats = "Point Blank Shot, Favored Enemy: Goblinoid";
+						gear = "Longbow Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "intRogue") {
+						//str = 10; dex = 16; con = 10; int = 16; wis = 10; cha = 11;
+						move = 7; hide = 7; spot = 4; listen = 4; sear = 7; disable = 7; lock = 7; sleight = 7;
+						feats = "Improved Initiative";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 15;
+						intiative = 7;	
+						hp = 6;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "wisRanger") {
+						//str = 10; dex = 16; con = 10; int = 11; wis = 16; cha = 10;	
+						survival = 7; hide = 7; move = 7; listen = 7; spot = 7; heal = 7;
+						feats = "Point Blank Shot";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 16;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "chaBard") {
+						//str = 10; dex = 16; con = 10; int = 11; wis = 10; cha = 16;
+						perform = 7; spellcraft = 4; gather = 7; decifer = 4; disguise = 7; sleight = 7;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "strBard") {
+						//str = 16; dex = 14; con = 9; int = 11; wis = 10; cha = 14;
+						perform = 6; spellcraft = 4; gather = 6; decifer = 4; disguise = 6; sleight = 6;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 5;
+					};
+					
+					if(race.value == "elf" && chaClass == "dexWizard") {
+						//str = 11; dex = 18; con = 10; int = 14; wis = 10; cha = 10;
+						spellcraft = 6; concentration = 5;
+						feats = "Toughness";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 14;
+						initiative = 4;
+						hp = 7;						
+					};
+					
+					if(race.value == "elf" && chaClass == "conSorcerer") {
+						//str = 10; dex = 14; con = 14; int = 11; wis = 10; cha = 14;
+						spellcraft = 4; concentration = 6;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 9;
+					};
+					
+					if(race.value == "elf" && chaClass == "intWizard") {
+						//str = 10; dex = 16; con = 10; int = 16; wis = 10; cha = 11;	
+						spellcraft = 7; concentration = 4; decipher = 7; hide = 5; move = 5;
+						feats = "Toughness";
+						gear = "Shortspear";
+						armor = 13;
+						initiative = 3;
+						hp = 7;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "elf" && chaClass == "wisSorcerer") {
+						//str = 10; dex = 14; con = 9; int = 10; wis = 16; cha = 14;	
+						spellcraft = 4; concentration = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 6;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "elf" && chaClass == "chaSorcerer") {
+						//str = 10; dex = 16; con = 10; int = 11; wis =10; cha = 16;
+						spellcraft = 4; concentration = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 13;
+						initiative = 3;
+						hp = 7;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "elf" && chaClass == "strPaladin") {
+						//str = 16; dex = 13; con = 10; int = 10; wis = 10; cha = 14;
+						heal = 4; ride = 5;
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 17;
+						initiative = 1;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "dexDruid") {
+						//str = 11; dex = 18; con = 10; int = 10; wis = 14; cha = 10;
+						spellcraft = 4; concentration = 4; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 19;
+						initiative = 4;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "conCleric") {
+						//str = 12; dex = 13; con = 14; int = 10; wis = 14; cha = 10;	
+						spellcraft = 4; concentration = 6;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 17;
+						initiative = 1;
+						hp = 10;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "elf" && chaClass == "intDruid") {
+						//str = 10; dex = 12; con = 10; int = 16; wis = 14; cha = 11;
+						spellcraft = 7; concentration = 4; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 16;
+						initiative = 1;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "elf" && chaClass == "wisCleric") {
+						//str = 10; dex = 16; con = 10; int = 11; wis = 16; cha = 10;	
+						spellcraft = 4; concentration = 4;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 1;
+						hp = 8;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "elf" && chaClass == "chaPaladin") {
+						//str = 11; dex = 16; con = 10; int = 10; wis = 10; cha = 16;
+						heal = 4; ride = 7; 
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 10;
+						spells = "N/A";
+					};
+	
+					//dwarf and class
+					if(race.value == "dwarf" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 10;
+						survival = 4; listen = 4; intimidate = 4; spot = 2;
+						feats = "Weapon Focus (greataxe) +1";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 13;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "dexMonk") {
+						//str = 12; dex = 16; con = 13; int = 10; wis = 14; cha = 8;
+						listen = 6; move = 7; escArtist = 7; hide = 7;
+						feats = "Dodge (+1 AC), Mobility";
+						gear = "Quarterstaff, Sling";
+						armor = 15;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "conFighter") {
+						//str = 14; dex = 11; con = 18; int = 11; wis = 10; cha = 10;	
+						intimidate = 4; sear = 2; listen = 2;
+						feats = "Weapon Focus (+1), Power Attack";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 16;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "intBarbarian") {
+						//str = 13; dex = 14; con = 13; int = 16; wis = 10; cha = 7;	
+						survival = 4; listen = 4; intimidate = 3; spot = 2; sear = 2; ride = 6; sear = 5;
+						feats = "Weapon Focus +1";
+						gear = "Great Axe, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "wisMonk") {
+						//str = 14; dex = 11; con = 14; int = 10; wis = 16; cha = 8;	
+						listen = 7; move = 4; tumble = 4; hide = 4; spot = 5;
+						feats = "Improved Initiative (+4)";
+						gear = "Quarterstaff, Sling";
+						armor = 13;
+						initiative = 4;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "chaFighter") {
+						//str = 10; dex = 14; con = 14; int = 11; wis =10; cha = 14;
+						intimidate = 6; listen = 2;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "strRanger") {
+						//str = 16; dex = 14; con = 14; int = 10; wis = 12; cha = 8;
+						survival = 5; hide = 6; move = 6; heal = 5; spot = 5; listen = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "dexRogue") {
+						//str = 11; dex = 16; con = 14; int = 14; wis = 10; cha = 8;
+						move = 7; hide = 7; spot = 4; disable = 6; lock = 7; sleight = 7; sear = 6; decipher = 6;
+						feats = "Improved Initiative";
+						gear = "Short Sword";
+						armor = 15;
+						initiative = 7;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "conRanger") {
+						//str = 12; dex = 14; con = 18; int = 11; wis = 11; cha = 8;	
+						survival = 4; hide = 6; move = 6; listen = 4; spot = 4; heal = 4;
+						feats = "Point Blank Shot, Favored Enemy: Goblinoid";
+						gear = "Longbow, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "intRogue") {
+						//str = 10; dex = 14; con = 14; int = 16; wis = 10; cha = 9;
+						move = 6; hide = 6; spot = 4; listen = 4; sear = 7; disable = 7; lock = 6; sleight = 7;
+						feats = "Improved Initiative";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 14;
+						intiative = 6;	
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "wisRanger") {
+						//str = 10; dex = 14; con = 14; int = 11; wis = 16; cha = 8;	
+						survival = 7; hide = 6; move = 6; listen = 7; spot = 7; heal = 7;
+						feats = "Point Blank Shot";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "chaBard") {
+						//str = 10; dex = 14; con = 14; int = 11; wis = 10; cha = 14;
+						perform = 6; spellcraft = 4; gather = 6; decifer = 4; disguise = 6; sleight = 6;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "strBard") {
+						//str = 16; dex = 12; con = 13; int = 11; wis = 10; cha = 12;
+						perform = 5; spellcraft = 4; gather = 5; decifer = 4; disguise = 5; sleight = 5;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 14;
+						initiative = 1;
+						hp = 7;
+					};
+					
+					if(race.value == "dwarf" && chaClass == "dexWizard") {
+						//str = 11; dex = 16; con = 12; int = 14; wis = 10; cha = 10;
+						spellcraft = 6; concentration = 5;
+						feats = "Toughness";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 13;
+						initiative = 3;
+						hp = 9;						
+					};
+					
+					if(race.value == "dwarf" && chaClass == "conSorcerer") {
+						//str = 10; dex = 12; con = 18; int = 11; wis = 10; cha = 12;
+						spellcraft = 4; concentration = 8;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 11;
+						initiative = 1;
+						hp = 11;
+					};
+					
+					if(race.value == "dwarf" && chaClass == "intWizard") {
+						//str = 10; dex = 14; con = 14; int = 16; wis = 10; cha = 9;	
+						spellcraft = 7; concentration = 6; decipher = 7; hide = 4; move = 4;
+						feats = "Toughness";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 9;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "wisSorcerer") {
+						//str = 10; dex = 12; con = 13; int = 10; wis = 16; cha = 12;	
+						spellcraft = 4; concentration = 5;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 11;
+						initiative = 1;
+						hp = 8;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "chaSorcerer") {
+						//str = 10; dex = 14; con = 14; int = 11; wis =10; cha = 14;
+						spellcraft = 4; concentration = 6;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 9;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "strPaladin") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						heal = 4; ride = 4;
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "dexDruid") {
+						//str = 11; dex = 16; con = 14; int = 10; wis = 14; cha = 2;
+						spellcraft = 4; concentration = 6; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 18;
+						initiative = 3;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "conCleric") {
+						//str = 12; dex = 11; con = 18; int = 10; wis = 14; cha = 12;	
+						spellcraft = 4; concentration = 8;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 12;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "intDruid") {
+						//str = 10; dex = 10; con = 14; int = 16; wis = 14; cha = 9;
+						spellcraft = 7; concentration = 6; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 15;
+						initiative = 0;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "wisCleric") {
+						//str = 10; dex = 14; con = 14; int = 11; wis = 16; cha = 8;	
+						spellcraft = 4; concentration = 6;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 0;
+						hp = 10;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "dwarf" && chaClass == "chaPaladin") {
+						//str = 11; dex = 14; con = 124; int = 10; wis = 10; cha = 14;
+						heal = 4; ride = 6; 
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					//gnome and class
+					if(race.value == "gnome" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						survival = 4; listen = 4; intimidate = 5; spot = 2;
+						feats = "Weapon Focus (greataxe) +1";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 13;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "dexMonk") {
+						//str = 10; dex = 16; con = 13; int = 10; wis = 14; cha = 10;
+						listen = 6; move = 7; escArtist = 7; hide = 7;
+						feats = "Dodge (+1 AC), Mobility";
+						gear = "Quarterstaff, Sling";
+						armor = 15;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "conFighter") {
+						//str = 10; dex = 13; con = 18; int = 11; wis = 10; cha = 12;	
+						intimidate = 5; sear = 2; listen = 2;
+						feats = "Weapon Focus (+1), Power Attack";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 16;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "intBarbarian") {
+						//str = 12; dex = 14; con = 13; int = 16; wis = 10; cha = 9;	
+						survival = 4; listen = 4; intimidate = 4; spot = 2; sear = 2; ride = 6; sear = 5;
+						feats = "Weapon Focus +1";
+						gear = "Great Axe, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "wisMonk") {
+						//str = 12; dex = 11; con = 14; int = 10; wis = 16; cha = 10;	
+						listen = 7; move = 4; tumble = 4; hide = 4;
+						feats = "Improved Initiative (+4)";
+						gear = "Quarterstaff, Sling";
+						armor = 13;
+						initiative = 4;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "chaFighter") {
+						//str = 8; dex = 14; con = 14; int = 11; wis =10; cha = 16;
+						intimidate = 7; listen = 2;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "strRanger") {
+						//str = 18; dex = 14; con = 14; int = 10; wis = 12; cha = 10;
+						survival = 5; hide = 6; move = 6; heal = 5; spot = 5; listen = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "dexRogue") {
+						//str = 9; dex = 16; con = 14; int = 14; wis = 10; cha = 10;
+						move = 7; hide = 7; spot = 4; disable = 6; lock = 7; sleight = 7; sear = 6; decipher = 6;
+						feats = "Improved Initiative";
+						gear = "Short Sword";
+						armor = 15;
+						initiative = 7;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "conRanger") {
+						//str = 10; dex = 14; con = 18; int = 11; wis = 11; cha = 10;	
+						survival = 4; hide = 6; move = 6; listen = 4; spot = 4; heal = 4;
+						feats = "Point Blank Shot, Favored Enemy: Goblinoid";
+						gear = "Longbow, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "intRogue") {
+						//str = 10; dex = 14; con = 12; int = 16; wis = 10; cha = 11;
+						move = 6; hide = 6; spot = 4; listen = 4; sear = 7; disable = 7; lock = 6; sleight = 7;
+						feats = "Improved Initiative";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 14;
+						intiative = 6;	
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "wisRanger") {
+						//str = 8; dex = 14; con = 14; int = 11; wis = 16; cha = 10;	
+						survival = 7; hide = 6; move = 6; listen = 7; spot = 7; heal = 7;
+						feats = "Point Blank Shot";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "chaBard") {
+						//str = 8; dex = 14; con = 14; int = 11; wis = 10; cha = 16;
+						perform = 7; spellcraft = 4; gather = 7; decifer = 4; disguise = 7; sleight = 6;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "strBard") {
+						//str = 14; dex = 12; con = 13; int = 11; wis = 10; cha = 14;
+						perform = 6; spellcraft = 4; gather = 6; decifer = 4; disguise = 6; sleight = 5;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 14;
+						initiative = 1;
+						hp = 7;
+					};
+					
+					if(race.value == "gnome" && chaClass == "dexWizard") {
+						//str = 9; dex = 16; con = 14; int = 14; wis = 10; cha = 10;
+						spellcraft = 6; concentration = 5;
+						feats = "Toughness";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 13;
+						initiative = 3;
+						hp = 9;						
+					};
+					
+					if(race.value == "gnome" && chaClass == "conSorcerer") {
+						//str = 8; dex = 12; con = 18; int = 11; wis = 10; cha = 14;
+						spellcraft = 4; concentration = 8;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 11;
+						initiative = 1;
+						hp = 11;
+					};
+					
+					if(race.value == "gnome" && chaClass == "intWizard") {
+						//str = 8; dex = 14; con = 14; int = 16; wis = 10; cha = 11;	
+						spellcraft = 7; concentration = 6; decipher = 7; hide = 4; move = 4;
+						feats = "Toughness";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 9;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "gnome" && chaClass == "wisSorcerer") {
+						//str = 8; dex = 12; con = 13; int = 10; wis = 16; cha = 14;	
+						spellcraft = 4; concentration = 5;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 11;
+						initiative = 1;
+						hp = 8;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "gnome" && chaClass == "chaSorcerer") {
+						//str = 8; dex = 14; con = 14; int = 11; wis =10; cha = 16;
+						spellcraft = 4; concentration = 6;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 9;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "gnome" && chaClass == "strPaladin") {
+						//str = 14; dex = 11; con = 14; int = 10; wis = 10; cha = 14;
+						heal = 4; ride = 4;
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "dexDruid") {
+						//str = 9; dex = 16; con = 14; int = 10; wis = 14; cha = 10;
+						spellcraft = 4; concentration = 6; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 18;
+						initiative = 3;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "conCleric") {
+						//str = 10; dex = 11; con = 18; int = 10; wis = 14; cha = 10;	
+						spellcraft = 4; concentration = 8;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 12;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "gnome" && chaClass == "intDruid") {
+						//str = 12; dex = 10; con = 14; int = 16; wis = 14; cha = 11;
+						spellcraft = 7; concentration = 6; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 15;
+						initiative = 0;
+						hp = 10;
+						spells = "N/A";
+					};
+					
+					if(race.value == "gnome" && chaClass == "wisCleric") {
+						//str = 8; dex = 14; con = 14; int = 11; wis = 16; cha = 10;	
+						spellcraft = 4; concentration = 6;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 0;
+						hp = 10;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "gnome" && chaClass == "chaPaladin") {
+						//str = 8; dex = 14; con = 14; int = 10; wis = 10; cha = 16;
+						heal = 4; ride = 6; 
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					//halfling and class
+					if(race.value == "halfling" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 12;
+						survival = 4; listen = 4; intimidate = 5; spot = 2;
+						feats = "Weapon Focus (greataxe) +1";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 14;
+						initiative = 1;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "dexMonk") {
+						//str = 10; dex = 18; con = 11; int = 10; wis = 14; cha = 10;
+						listen = 6; move = 7; escArtist = 7; hide = 7;
+						feats = "Dodge (+1 AC), Mobility";
+						gear = "Quarterstaff, Sling";
+						armor = 16;
+						initiative = 4;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "conFighter") {
+						//str = 14; dex = 11; con = 16; int = 11; wis = 10; cha = 12;	
+						intimidate = 4; sear = 2; listen = 2; spot = 2;
+						feats = "Weapon Focus (+1), Power Attack";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 17;
+						initiative = 1;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "intBarbarian") {
+						//str = 11; dex = 16; con = 11; int = 16; wis = 10; cha = 9;	
+						survival = 4; listen = 4; intimidate = 4; spot = 2; sear = 2; ride = 6; sear = 5;
+						feats = "Weapon Focus +1";
+						gear = "Great Axe, Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "wisMonk") {
+						//str = 8; dex = 16; con = 12; int = 11; wis =10; cha = 16;
+						intimidate = 7; listen = 2;
+						feats = "Improved Initiative (+4)";
+						gear = "Quarterstaff, Sling";
+						armor = 13;
+						initiative = 5;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "chaFighter") {
+						//str = 8; dex = 16; con = 12; int = 11; wis =10; cha = 16;
+						intimidate = 7; listen = 2;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "strRanger") {
+						//str = 18; dex = 16; con = 12; int = 10; wis = 12; cha = 10;
+						survival = 5; hide = 7; move = 7; heal = 5; spot = 5; listen = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "dexRogue") {
+						//str = 9; dex = 18; con = 12; int = 14; wis = 10; cha = 10;
+						move = 8; hide = 8; spot = 4; disable = 6; lock = 8; sleight = 8; sear = 6; decipher = 6;
+						feats = "Improved Initiative";
+						gear = "Short Sword";
+						armor = 16;
+						initiative = 8;
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "conRanger") {
+						//str = 10; dex = 16; con = 16; int = 11; wis = 11; cha = 10;	
+						survival = 4; hide = 7; move = 7; listen = 4; spot = 4; heal = 4;
+						feats = "Point Blank Shot, Favored Enemy: Goblinoid";
+						gear = "Longbow, Studded Leather";
+						armor = 16;
+						initiative = 3;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "intRogue") {
+						//str = 8; dex = 16; con = 12; int = 16; wis = 10; cha = 11;
+						move = 7; hide = 7; spot = 4; listen = 4; sear = 7; disable = 7; lock = 7; sleight = 7;
+						feats = "Improved Initiative";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 15;
+						intiative = 7;	
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "wisRanger") {
+						//str = 8; dex = 16; con = 12; int = 11; wis = 16; cha = 10;	
+						survival = 7; hide = 6; move = 6; listen = 7; spot = 7; heal = 7;
+						feats = "Point Blank Shot";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 16;
+						initiative = 3;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "chaBard") {
+						//str = 8; dex = 16; con = 12; int = 11; wis = 10; cha = 16;
+						perform = 7; spellcraft = 4; gather = 7; decifer = 4; disguise = 7; sleight = 7;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "strBard") {
+						//str = 14; dex = 14; con = 11; int = 11; wis = 10; cha = 14;
+						perform = 6; spellcraft = 4; gather = 6; decifer = 4; disguise = 6; sleight = 4;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 6;
+					};
+					
+					if(race.value == "halfling" && chaClass == "dexWizard") {
+						//str = 9; dex = 18; con = 12; int = 14; wis = 10; cha = 10;
+						spellcraft = 6; concentration = 5;
+						feats = "Toughness";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 14;
+						initiative = 4;
+						hp = 8;						
+					};
+					
+					if(race.value == "halfling" && chaClass == "conSorcerer") {
+						//str = 8; dex = 14; con = 16; int = 11; wis = 10; cha = 14;
+						spellcraft = 4; concentration = 7;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 10;
+					};
+					
+					if(race.value == "halfling" && chaClass == "intWizard") {
+						//str = 8; dex = 16; con = 12; int = 16; wis = 10; cha = 11;	
+						spellcraft = 7; concentration = 5; decipher = 7; hide = 5; move = 5;
+						feats = "Toughness";
+						gear = "Shortspear";
+						armor = 13;
+						initiative = 3;
+						hp = 8;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "halfling" && chaClass == "wisSorcerer") {
+						//str = 8; dex = 14; con = 11; int = 10; wis = 16; cha = 14;	
+						spellcraft = 4; concentration = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 7;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "halfling" && chaClass == "chaSorcerer") {
+						//str = 8; dex = 16; con = 12; int = 11; wis =10; cha = 16;
+						spellcraft = 4; concentration = 5;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 13;
+						initiative = 3;
+						hp = 8;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "halfling" && chaClass == "strPaladin") {
+						//str = 14; dex = 13; con = 12; int = 10; wis = 10; cha = 14;
+						heal = 4; ride = 4;
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 17;
+						initiative = 1;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "dexDruid") {
+						//str = 9; dex = 18; con = 12; int = 10; wis = 14; cha = 10;
+						spellcraft = 4; concentration = 5; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 19;
+						initiative = 4;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "conCleric") {
+						//str = 10; dex = 13; con = 16; int = 10; wis = 14; cha = 10;	
+						spellcraft = 4; concentration = 7;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 17;
+						initiative = 1;
+						hp = 11;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "halfling" && chaClass == "intDruid") {
+						//str = 8; dex = 12; con = 12; int = 16; wis = 14; cha = 11;
+						spellcraft = 7; concentration = 5; survival = 6; heal = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 16;
+						initiative = 1;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "halfling" && chaClass == "wisCleric") {
+						//str = 8; dex = 16; con = 12; int = 11; wis = 16; cha = 10;	
+						spellcraft = 4; concentration = 5;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 1;
+						hp = 9;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "halfling" && chaClass == "chaPaladin") {
+						//str = 9; dex = 16; con = 12; int = 10; wis = 10; cha = 16;
+						heal = 4; ride = 7; 
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 19;
+						initiative = 3;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					//half-orc and class
+					if(race.value == "orc" && chaClass == "strBarbarian") {
+						//str = 16; dex = 11; con = 14; int = 10; wis = 10; cha = 10;
+						survival = 4; listen = 4; intimidate = 3;
+						feats = "Weapon Focus (greataxe) +1";
+						gear = "Greataxe, Dagger, Studded Leather Armor";
+						armor = 13;
+						initiative = 0;
+						hp = 14;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "dexMonk") {
+						//str = 14; dex = 16; con = 11; int = 8; wis = 14; cha = 8;
+						listen = 6; move = 7;
+						feats = "Dodge (+1 AC), Mobility";
+						gear = "Quarterstaff, Sling";
+						armor = 15;
+						initiative = 3;
+						hp = 8;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "conFighter") {
+						//str = 16; dex = 11; con = 16; int = 9; wis = 10; cha = 10;	
+						intimidate = 4; sear = 2;
+						feats = "Weapon Focus (+1), Power Attack";
+						gear = "Longsword, Large Wodden Shield, Scale mail";
+						armor = 16;
+						initiative = 0;
+						hp = 13;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "intBarbarian") {
+						//str = 15; dex = 14; con = 11; int = 14; wis = 10; cha = 7;	
+						survival = 4; listen = 4; intimidate = 3; spot = 2; sear = 2; sear = 5;
+						feats = "Weapon Focus +1";
+						gear = "Great Axe, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "wisMonk") {
+						//str = 16; dex = 11; con = 12; int = 8; wis = 16; cha = 8;	
+						listen = 7; move = 4; tumble = 4;
+						feats = "Improved Initiative (+4)";
+						gear = "Quarterstaff, Sling";
+						armor = 13;
+						initiative = 4;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "chaFighter") {
+						//str = 12; dex = 14; con = 12; int = 9; wis =10; cha = 14;
+						intimidate = 6;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "strRanger") {
+						//str = 18; dex = 14; con = 12; int = 8; wis = 12; cha = 8;
+						survival = 5; hide = 6; move = 6; heal = 5;
+						feats = "Point Blank Shot, Favorite Enemy: Goblinoids)";
+						gear = "Longsword, Short Sword, Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "dexRogue") {
+						//str = 13; dex = 16; con = 12; int = 12; wis = 10; cha = 8;
+						move = 7; hide = 7; spot = 4; disable = 5; lock = 7; sleight = 7; sear = 5;
+						feats = "Improved Initiative";
+						gear = "Short Sword";
+						armor = 15;
+						initiative = 7;
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "conRanger") {
+						//str = 14; dex = 14; con = 16; int = 9; wis = 11; cha = 8;	
+						survival = 4; hide = 6; move = 6; listen = 4; spot = 4;
+						feats = "Point Blank Shot, Favored Enemy: Goblinoid";
+						gear = "Longbow Studded Leather";
+						armor = 15;
+						initiative = 2;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "intRogue") {
+						//str = 8; dex = 14; con = 12; int = 14; wis = 10; cha = 9;
+						move = 6; hide = 6; spot = 4; listen = 4; sear = 7; disable = 7; lock = 6;
+						feats = "Improved Initiative";
+						gear  = "Short Sword, Dagger, Leather Armor";
+						armor = 14;
+						intiative = 6;	
+						hp = 7;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "wisRanger") {
+						//str = 12; dex = 14; con = 12; int = 9; wis = 16; cha = 8;	
+						survival = 7; hide = 6; move = 6; listen = 7; spot = 7;
+						feats = "Point Blank Shot";
+						gear = "Longbow, Studded Leather Armor";
+						armor = 15;
+						initiative = 2;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "chaBard") {
+						//str = 12; dex = 14; con = 12; int = 9; wis = 10; cha = 14;
+						perform = 6; spellcraft = 3; gather = 6; decifer = 3; disguise = 6;
+						feats = "Dex Fighting";
+						gear = "Longsword, Large Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "strBard") {
+						//str = 18; dex = 12; con = 11; int = 9; wis = 10; cha = 12;
+						perform = 5; spellcraft = 3; gather = 5; decifer = 3; disguise = 5;
+						feats = "Dodge";
+						spells = "Detect Magic, Ghost Sound, Light, Read Magic";
+						gears = "Longsword, Lute, Studded Leather Armor";
+						armor = 14;
+						initiative = 1;
+						hp = 6;
+					};
+					
+					if(race.value == "orc" && chaClass == "dexWizard") {
+						//str = 13; dex = 16; con = 12; int = 12; wis = 10; cha = 8;
+						spellcraft = 5; concentration = 5;
+						feats = "Toughness";
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear.";
+						gear = "Quarterstaff";
+						armor = 13;
+						initiative = 3;
+						hp = 8;						
+					};
+					
+					if(race.value == "orc" && chaClass == "conSorcerer") {
+						//str = 12; dex = 12; con = 16; int = 9; wis = 10; cha = 12;
+						spellcraft = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						gear = "Shortspear";
+						armor = 11;
+						initiative = 1;
+						hp = 10;
+					};
+					
+					if(race.value == "orc" && chaClass == "intWizard") {
+						//str = 12; dex = 14; con = 12; int = 14; wis = 10; cha = 9;	
+						spellcraft = 6; concentration = 5; decipher = 6; hide = 4;
+						feats = "Toughness";
+						gear = "Shortspear";
+						armor = 12;
+						initiative = 2;
+						hp = 8;
+						spells = "All 0-level spells, Charm Person, Summon Monster I, Sleep, Magic Missle, Cause Fear, Color Spray.";
+					};
+					
+					if(race.value == "orc" && chaClass == "wisSorcerer") {
+						//str = 12; dex = 12; con = 11; int = 8; wis = 16; cha = 12;	
+						spellcraft = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 11;
+						initiative = 1;
+						hp = 7;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "orc" && chaClass == "chaSorcerer") {
+						//str = 12; dex = 14; con = 12; int = 9; wis =10; cha = 14;
+						spellcraft = 4;
+						feats = "Toughness";
+						Spells = "Detect Magic, Ghost Sound, Light, Read Magic, Magic Missle, Sleep";
+						armor = 12;
+						initiative = 2;
+						hp = 8;
+						gear = "Robes, Spell Components";
+					};
+					
+					if(race.value == "orc" && chaClass == "strPaladin") {
+						//str = 18; dex = 11; con = 12; int = 8; wis = 10; cha = 12;
+						heal = 4;
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "dexDruid") {
+						//str = 13; dex = 16; con = 12; int = 8; wis = 14; cha = 8;
+						spellcraft = 4; concentration = 5; survival = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 18;
+						initiative = 3;
+						hp = 12;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "conCleric") {
+						//str = 14; dex = 11; con = 16; int = 8; wis = 14; cha = 8;	
+						spellcraft = 4;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 16;
+						initiative = 0;
+						hp = 11;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "orc" && chaClass == "intDruid") {
+						//str = 12; dex = 10; con = 12; int = 14; wis = 14; cha = 9;
+						spellcraft = 7; concentration = 5; survival = 6;
+						feats = "Scribe Scroll";
+						gear = "Scimitar, Heavy Wooden Shield, Hide Armor";
+						armor = 15;
+						initiative = 0;
+						hp = 9;
+						spells = "N/A";
+					};
+					
+					if(race.value == "orc" && chaClass == "wisCleric") {
+						//str = 12; dex = 14; con = 12; int = 9; wis = 16; cha = 8;	
+						spellcraft = 4;
+						feats = "Scribe Scroll";
+						gear = "Heavy Mace, Heavy Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 0;
+						hp = 9;
+						spells = "All Cleric Spells Available";
+					};
+					
+					if(race.value == "orc" && chaClass == "chaPaladin") {
+						//str = 13; dex = 14; con = 12; int = 8; wis = 10; cha = 14;
+						heal = 4; ride = 6; 
+						feats = "Weapon Focus (+1)";
+						gear = "Longsword, Heavey Wooden Shield, Scale Mail";
+						armor = 18;
+						initiative = 2;
+						hp = 11;
+						spells = "N/A";
+					};
+					
+					//alignment statements. to determine the final alignment for char
+					if(alignment.value == "nuetral" && gve.value == "good") {
+						finalAlignment = "Nuetral Good";
+					};
+					
+					if(alignment.value == "nuetral" && gve.value == "nuet") {
+						finalAlignment = "True Nuetral";	
+					};
+					
+					if(alignment.value == "nuetral" && gve.value == "evil") {
+						finalAlignment = "Nuetral Evil";	
+					};
+					
+					//chaotic alignment
+					if(alignment.value == "chaotic" && gve.value == "good") {
+						finalAlignment = "Chaotic Good";	
+					};
+					
+					if(alignment.value == "chaotic" && gve.value == "nuet") {
+						finalAlignment = "Chaotic Nuetral";		
+					};
+					
+					if(alignment.value == "chaotic" && gve.value == "evil") {
+						finalAlignment = "Chaotic Evil";		
+					};
+					
+					//lawful alignments
+					if(alignment.value == "lawful" && gve.value == "good") {
+						finalAlignment = "Lawful Good";
+					};
+					
+					if(alignment.value == "lawful" && gve.value == "nuet") {
+						finalAlignment = "Lawful Nuetral";
+					};
+					
+					if(alignment.value == "lawful" && gve.value == "evil") {
+						finalAlignment = "Lawful Evil";
+					};
+					//console.log(finalAlignment);
+					
+					//determines weight and height the var is sizHeight and sizWeight
+					if(size.value == "tall") {
+						if(race.value == "human" && weight.value == "fat") {
+							sizHeight = "6ft 2in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "human" && weight.value == "normal") {
+							sizHeight = "6ft 2in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "human" && weight.value == "skinny") {
+							sizHeight = "6ft 2in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "elf" && weight.value == "fat") {
+							sizHeight = "5ft 4in"; sizWeight = "120 lbs";
+						};
+						if(race.value == "elf" && weight.value == "normal") {
+							sizHeight = "5ft 4in"; sizWeight = "100 lbs";
+						};
+						if(race.value == "elf" && weight.value == "skinny") {
+							sizHeight = "5ft 4in"; sizWeight = "80 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "fat") {
+							sizHeight = "4ft 2in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "normal") {
+							sizHeight = "4ft 2in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "skinny") {
+							sizHeight = "4ft 2in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "fat") {
+							sizHeight = "3ft 6in"; sizWeight = "46 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "normal") {
+							sizHeight = "3ft 6in"; sizWeight = "42 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "skinny") {
+							sizHeight = "3ft 6in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "fat") {
+							sizHeight = "3ft 2in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "normal") {
+							sizHeight = "3ft 2in"; sizWeight = "32 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "skinny") {
+							sizHeight = "3ft 2in"; sizWeight = "28 lbs";
+						};
+						if(race.value == "orc" && weight.value == "fat") {
+							sizHeight = "6ft 10in"; sizWeight = "320 lbs";
+						};
+						if(race.value == "orc" && weight.value == "normal") {
+							sizHeight = "6ft 10in"; sizWeight = "280 lbs";
+						};
+						if(race.value == "orc" && weight.value == "skinny") {
+							sizHeight = "6ft 10in"; sizWeight = "250 lbs";
+						};
+					};
+					
+					if(size.value == "average") {
+						if(race.value == "human" && weight.value == "fat") {
+							sizHeight = "5ft 8in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "human" && weight.value == "normal") {
+							sizHeight = "5ft 8in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "human" && weight.value == "skinny") {
+							sizHeight = "5ft 8in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "elf" && weight.value == "fat") {
+							sizHeight = "5ft 0in"; sizWeight = "120 lbs";
+						};
+						if(race.value == "elf" && weight.value == "normal") {
+							sizHeight = "5ft 0in"; sizWeight = "100 lbs";
+						};
+						if(race.value == "elf" && weight.value == "skinny") {
+							sizHeight = "5ft 0in"; sizWeight = "80 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "fat") {
+							sizHeight = "4ft 0in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "normal") {
+							sizHeight = "4ft 0in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "skinny") {
+							sizHeight = "4ft 0in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "fat") {
+							sizHeight = "3ft 2in"; sizWeight = "46 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "normal") {
+							sizHeight = "3ft 2in"; sizWeight = "42 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "skinny") {
+							sizHeight = "3ft 2in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "fat") {
+							sizHeight = "3ft 0in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "normal") {
+							sizHeight = "3ft 0in"; sizWeight = "32 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "skinny") {
+							sizHeight = "3ft 0in"; sizWeight = "28 lbs";
+						};
+						if(race.value == "orc" && weight.value == "fat") {
+							sizHeight = "6ft 5in"; sizWeight = "320 lbs";
+						};
+						if(race.value == "orc" && weight.value == "normal") {
+							sizHeight = "6ft 5in"; sizWeight = "280 lbs";
+						};
+						if(race.value == "orc" && weight.value == "skinny") {
+							sizHeight = "6ft 5in"; sizWeight = "250 lbs";
+						};
+					};
+					
+					if(size.value == "short") {
+						if(race.value == "human" && weight.value == "fat") {
+							sizHeight = "5ft 0in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "human" && weight.value == "normal") {
+							sizHeight = "5ft 0in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "human" && weight.value == "skinny") {
+							sizHeight = "5ft 0in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "elf" && weight.value == "fat") {
+							sizHeight = "4ft 10in"; sizWeight = "120 lbs";
+						};
+						if(race.value == "elf" && weight.value == "normal") {
+							sizHeight = "4ft 10in"; sizWeight = "100 lbs";
+						};
+						if(race.value == "elf" && weight.value == "skinny") {
+							sizHeight = "4ft 10in"; sizWeight = "80 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "fat") {
+							sizHeight = "3ft 10in"; sizWeight = "200 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "normal") {
+							sizHeight = "3ft 10in"; sizWeight = "160 lbs";
+						};
+						if(race.value == "dwarf" && weight.value == "skinny") {
+							sizHeight = "3ft 10in"; sizWeight = "140 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "fat") {
+							sizHeight = "3ft 0in"; sizWeight = "46 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "normal") {
+							sizHeight = "3ft 0in"; sizWeight = "42 lbs";
+						};
+						if(race.value == "gnome" && weight.value == "skinny") {
+							sizHeight = "3ft 0in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "fat") {
+							sizHeight = "2ft 10in"; sizWeight = "38 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "normal") {
+							sizHeight = "2ft 10in"; sizWeight = "32 lbs";
+						};
+						if(race.value == "halfling" && weight.value == "skinny") {
+							sizHeight = "2ft 10in"; sizWeight = "28 lbs";
+						};
+						if(race.value == "orc" && weight.value == "fat") {
+							sizHeight = "6ft 0in"; sizWeight = "320 lbs";
+						};
+						if(race.value == "orc" && weight.value == "normal") {
+							sizHeight = "6ft 0in"; sizWeight = "280 lbs";
+						};
+						if(race.value == "orc" && weight.value == "skinny") {
+							sizHeight = "6ft 0in"; sizWeight = "250 lbs";
+						};
+					};
+					characterName.innerHTML = "<h2>" + nameSelect.value + "</h2>";
+					text1.innerHTML = "Race: "+race.value+"<br/>"+"HP: "+hp+"<br />"+"AC: "+armor+"<br />" + "Initiative: "+initiative+"<br />"+ "Strength = " + str + ", Dexterity = " + dex + ", Constitution = " + con + ", Intelligence = " + int + ", Wisdom = " + wis + ", Charisma = " + cha;
+					
+					text2.innerHTML = finalClass + "<br />" + "Feats: " + feats + "<br />" + "Appraise "+appraise+", Blanace "+balance+", Bluff "+bluff+", Climb "+climb+", Concentration "+concentration+", Decipher Script "+decipher+", Diplomacy "+diplomacy+", Disable Device "+disable+", Disguise "+disguise+", Escape Artist "+escArtist+", Gather Information "+gather+", Handle Animal "+handle+", Heal "+heal+", Hide "+hide+", Intimidate "+intimidate+", Listen "+listen+", Move Silently "+move+", Open Lock "+lock+", Perform(Lute) "+perform+", Ride "+ride+", Search "+sear+", Sense Motive "+sense+", Sleight of Hand "+sleight+", Spellcraft "+spellcraft+", Spot "+spot+", Survival "+survival+", Tumble "+tumble+", Use Magic Devise "+useMagic;
+					
+					text3.innerHTML = "Gear: " + gear + "<br />" + "Spells: " + spells + "<br />" + "Alignment: "+finalAlignment+"<br />" + "Height: "+sizHeight+", Weight: "+sizWeight;
+					
+					var output = document.getElementById('output');
+					
+					window.localStorage.setItem(nameSelect.value, output);
+					
+					console.log(output);
+					
+					
+				})
+		</script>
+    </body>
+</html>
