@@ -7,30 +7,19 @@
     </head>
     
     <body>
-    	<div id="character1">
-        	<input type="button" value="this is my shinny button" id="getChar1" />        
-        </div>
+		<div id="backMain">
+        	<input type="button" onClick="location.href='index.html'" value="Character Generator" id="toCharGen" />
+       	</div>
+
+    	
+    	<div id="characters"></div>
     
     
     	<script>
 		
-			var submitButton = document.getElementById('getChar1');
-			
-			submitButton.addEventListener('click',
-				function(event) {
-					
-					window.localStorage.getItem(nameSelect.value, output);
-					
-					var buttonName = nameSelect.value;
-					//getChar1.button.innerHTML = buttonName;
-					console.log(buttonName);
-					
-					
-					
-					
-					
-					
-				})
+			var characters = document.getElementById('characters');
+			characters.innerHTML=window.localStorage.getItem(nameSelect.value);
+				
 			
 			
 		
